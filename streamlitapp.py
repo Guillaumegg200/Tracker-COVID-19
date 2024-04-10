@@ -73,7 +73,7 @@ min_value = datetime(2020, 5, 13)
 max_value = datetime(2023, 6, 23) - timedelta(days=30*9)
 start_value = datetime(2023, 6, 23) - timedelta(days=30*9)
 
-st.subheader("Epidemic evolution")
+st.subheader("Epidemic evolution in terms of number of cases")
 st.write('Number of Covid-19 cases reported at the time of testing in hospitals and Ehpad.')
 
 # Create a slider for date selection
@@ -106,7 +106,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.subheader("Incidence rate")
     st.markdown(
-                f"""<h4 style="color: #c8738b;">{df.iloc[-1]['Ti']:.2f} ‰ on {today.strftime("%A, %B %d, %Y")}</h4>""",
+                f"""<h4 style="color: #c8738b;">{df.iloc[-1]['Ti']:.0f} ‰ on {today.strftime("%A, %B %d, %Y")}</h4>""",
                 unsafe_allow_html=True,
             )
     st.plotly_chart(plot_incidence_rate(df), use_container_width=True)
@@ -114,10 +114,10 @@ with col1:
 with col2:
     st.subheader("People tested")
     st.markdown(
-                f"""<h4 style="color: #c8738b;">{df.iloc[-1]['T']:.0f} on {today.strftime("%A, %B %d, %Y")}</h4>""",
+                f"""<h4 style="color: #c8738b;">{df.iloc[-1]['T']//1000}k on {today.strftime("%A, %B %d, %Y")}</h4>""",
                 unsafe_allow_html=True,
             )
-    st.plotly_chart(plot_cases_trend(df), use_container_width=True)
+    st.plotly_chart(plot_tested(df), use_container_width=True)
 
 with col3:
     st.subheader("Positive Rate")

@@ -27,12 +27,17 @@ def plot_positive_cases(df, start_date, end_date):
     df_filtered = df[(df['date'] > start_date) & (df['date'] < end_date)]
     fig = px.bar(df_filtered, x='date', y='P')
     fig.data[0].marker.color = '#eed5dc'
-    line_trace = go.Scatter(x=df_filtered['date'], y=df_filtered['P7'], mode='lines', line=dict(color='#c8738b'), showlegend=False)
-    fig.add_trace(line_trace)
+    line_trace = go.Scatter(x=df_filtered['date'], y=df_filtered['P7'], mode='lines', line=dict(color='#c8738b'), showlegend=False, hoverinfo = 'none')
     fig.update_layout(legend=dict(orientation="h", yanchor="top", y=1.1),
                       plot_bgcolor='white',
                       yaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgrey'),
                       hovermode="x unified")
+    # Update hovertemplate for each trace
+    fig.update_traces(
+    hovertemplate='%{x}<br> <b>%{y:.2s}</b> <extra></extra>'  # Customize tooltip content
+    )
+    fig.add_trace(line_trace)
+
     fig.update_yaxes(title_text='')
     fig.update_xaxes(title_text='')
     return fig
@@ -40,7 +45,11 @@ def plot_positive_cases(df, start_date, end_date):
 def plot_positive_cases_with_zoom(df, start_date, end_date):
     fig = px.bar(df, x='date', y='P')
     fig.data[0].marker.color = '#eed5dc'
-    line_trace = go.Scatter(x=df['date'], y=df['P7'], mode='lines', name='moving average over the last 7 days', line=dict(color='#c8738b'))
+    line_trace = go.Scatter(x=df['date'], y=df['P7'], mode='lines', name='Moving average over the last 7 days', line=dict(color='#c8738b'), hoverinfo = 'none')
+    fig.update_traces(
+    hovertemplate='%{x}<br> <b>%{y:.2s}</b> <extra></extra>'  # Customize tooltip content
+    )
+
     fig.update_layout(legend=dict(orientation="h", yanchor="top", y=1.1),
                       yaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgrey'),
                       plot_bgcolor='white',
@@ -56,7 +65,7 @@ def plot_positive_cases_with_zoom(df, start_date, end_date):
     fig.add_vline(x=str(end_date), line_width=1, line_dash="dash", line_color="grey")
     return fig
 
-def plot_cases_trend(df):
+def plot_tested(df):
     fig = px.line(df, x='date', y='T7')
     fig.update_layout(legend=dict(orientation="h", yanchor="top", y=1.1),
                       xaxis=dict(title_text=''),
@@ -66,6 +75,11 @@ def plot_cases_trend(df):
     fig.data[0].fill = 'tozeroy'
     fig.data[0].fillcolor = '#eed5dc'
     fig.update_traces(marker=dict(size=10), line=dict(color='#c8738b'))
+    fig.update_traces(
+    marker=dict(size=10),
+    line=dict(color='#c8738b'),
+    hovertemplate=' <b>%{y:.2s}</b><extra></extra>'
+    )
     return fig
 
 def plot_positive_rate(df):
@@ -86,6 +100,11 @@ def plot_positive_rate(df):
     fig.data[0].fill = 'tozeroy'
     fig.data[0].fillcolor = '#eed5dc'
     fig.update_traces(marker=dict(size=10), line=dict(color='#c8738b'))
+    fig.update_traces(
+    marker=dict(size=10),
+    line=dict(color='#c8738b'),
+    hovertemplate='<b>%{y} </b><extra></extra>'
+    )
     return fig
 
 def plot_incidence_rate(df):
@@ -99,5 +118,10 @@ def plot_incidence_rate(df):
     fig.data[0].fill = 'tozeroy'
     fig.data[0].fillcolor = '#eed5dc'
     fig.update_traces(marker=dict(size=10), line=dict(color='#c8738b'))
+    fig.update_traces(
+    marker=dict(size=10),
+    line=dict(color='#c8738b'),
+    hovertemplate='<b>%{y:.0f}‰ </b><extra></extra>'
+    )
     return fig
 
