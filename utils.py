@@ -307,6 +307,11 @@ def map_cov(dep_to_highlight=None, wave = 1):
     weekly_df["date_de_passage"] = pd.to_datetime(weekly_df["date_de_passage"])
     max_cumulative_value = weekly_df['cumulative_nbre_pass_corona'].max()
     
+    dep_names = pd.read_csv("raw_data/departements-region.csv")
+    dep_names["num_dep"] = dep_names["num_dep"].apply(lambda x: str(int(x)) if isinstance(x, str) and x.isdigit() else x)
+    dep_names = dep_names[["num_dep","dep_name"]]
+    weekly_df = pd.merge(weekly_df, dep_names, how='left', left_on='dep', right_on='num_dep')
+
     geo_df = gpd.read_file('raw_data/departements.geojson')
     # Convert 'code' column to int except for '2A' and '2B'
     geo_df["code"] = geo_df["code"].apply(lambda x: int(x) if x.isdigit() else x)
@@ -316,6 +321,7 @@ def map_cov(dep_to_highlight=None, wave = 1):
         fig = px.choropleth_mapbox(weekly_df, geojson=geo_df, locations='dep',
                                 featureidkey="properties.code",
                                 color='cumulative_nbre_pass_corona',
+                                hover_name='dep_name',
                                 center={"lat": 46.2276, "lon": 2.2137},
                                 mapbox_style="carto-positron", zoom=3.5,
                                 animation_frame='date_de_passage',
@@ -332,6 +338,7 @@ def map_cov(dep_to_highlight=None, wave = 1):
         weekly_df =  weekly_df[weekly_df['dep'] == str(dep_to_highlight)]
         fig = px.choropleth_mapbox(weekly_df, geojson=geo_df, locations='dep',
                                 featureidkey="properties.code",
+                                hover_name='dep_name',
                                 color='cumulative_nbre_pass_corona',
                                 center={"lat": center_lat, "lon": center_lon},
                                 mapbox_style="carto-positron", zoom=7,
@@ -340,6 +347,6 @@ def map_cov(dep_to_highlight=None, wave = 1):
                                 range_color=[0, max_cumulative_value])
         # add department name to the map
         dep_name = geo_df[geo_df['code'] == dep_to_highlight].nom.values[0]
-        fig.update_layout(title_text=f'Covid cases in {dep_name} department during the {wave} wave')
+        fig.update_layout(title_text=f'Covid cases in {dep_name} during the {wave} wave')
     
     return fig
