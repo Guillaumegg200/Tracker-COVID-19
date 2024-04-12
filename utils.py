@@ -186,16 +186,29 @@ def plot_timeserie_with_animation(dep):
     fig.add_trace(go.Scatter(x=dep_df['date_de_passage'], y=dep_df['nbre_pass_corona'],
                                 mode='lines+markers', name=f"Cases for department {dep}", line=dict(color='#c8738b')),
                     row=1, col=1)
-    #add waves end dates to the plot 
-
-    fig.add_vline(x=wave1_end_date, line_dash="dash", line_color="green", row=1, col=1)
-    fig.add_vline(x=wave1_end_date, line_dash="dash", line_color="green", row=1, col=1)
-    fig.add_vline(x=wave2_end_date, line_dash="dash", line_color="green", row=1, col=1)
-    fig.add_vline(x=wave3_end_date, line_dash="dash", line_color="green", row=1, col=1)
     
+
+    wave1_end_date = pd.to_datetime('2020-09-14').timestamp() * 1000
+    wave2_end_date = pd.to_datetime('2020-11-02').timestamp() * 1000
+    wave3_end_date = pd.to_datetime('2021-02-01').timestamp() * 1000
+
+    fig.update_layout(xaxis_type='date')
+
+    # Now use these datetime objects in your add_vline calls
+    fig.add_vline(x=wave1_end_date, line_dash="dash", line_color="green", row=1, col=1)
+    fig.add_vline(x=wave1_end_date, line_dash="dash", line_color="green", row=1, col=1, 
+                annotation_text="End of wave 1", annotation_position="top left")
+    fig.add_vline(x=wave2_end_date, line_dash="dash", line_color="green", row=1, col=1, 
+                annotation_text="End of wave 2", annotation_position="top left")
+    fig.add_vline(x=wave3_end_date, line_dash="dash", line_color="green", row=1, col=1, 
+                annotation_text="End of wave 3", annotation_position="top left")
+    
+    
+    #add waves legend 
+   
     gauge={
             'axis': {'range': [None, 0.3], 'tickwidth': 1, 'tickcolor': "darkblue"},
-            'bar': {'color': "darkred"},
+            'bar': {'color': "#c8738b"},
             'steps': [
                 {'range': [0, 0.06], 'color': 'lightgray'},
                 {'range': [0.06, 0.12], 'color': 'gray'},
@@ -212,7 +225,7 @@ def plot_timeserie_with_animation(dep):
 
     # Add a placeholder trace for the proportion over max value, to be updated in frames
     fig.add_trace(go.Indicator(mode="number+gauge", value=dep_df['prop_covid'][0], delta={'reference': 1, 'relative': True},
-                               title={"text": "<span style='font-size:0.8em'>Proportion of covid case vs visits</span>"},gauge=gauge),
+                               title={"text": "<span style='font-size:0.8em'>Proportion of covid cases out of all healthcare visits</span>"},gauge=gauge),
                   row=2, col=2)
     
 
@@ -244,7 +257,7 @@ def plot_timeserie_with_animation(dep):
             y1=max_val,
             line=dict(color="Red", width=2, dash="dash")
         )])
-
+    
         frames.append(go.Frame(
             data=frame_data,
             layout=frame_layout,
@@ -252,6 +265,8 @@ def plot_timeserie_with_animation(dep):
         ))
 
     fig.frames = frames
+
+    
     # Set up the slider and play button
     fig.update_layout(
         updatemenus=[{

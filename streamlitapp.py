@@ -135,40 +135,67 @@ def Overview_page():
                 )
         st.plotly_chart(plot_positive_rate(df), use_container_width=True)
 
-def Departement_page():
-    # By department
-    departements = ['France'] + list(unique_departments())
-    # create a select box for the user to select a department
-    st.subheader("Epidemic evolution by department")
-    st.write("This part of the dashboard shows the evolution of the epidemic in France and its departments. The map shows the incidence rate in each department, while the graph shows the evolution of the number of cases in the selected department.")
-
-    col_dep, col_wave  = st.columns(2)
+def DepartmentPage():
+    """
+    This function creates a page on the Streamlit app that focuses on the
+    epidemic's evolution by department in France. It provides interactive
+    elements for users to select a department and a wave of the epidemic, 
+    and displays corresponding visual data.
+    """
+    # Begin by defining the departments dropdown, including a default 'France' option
+    departments = ['France'] + list(unique_departments())
+    
+    # Display a section header and an introductory message
+    st.subheader("Epidemic Evolution by Department")
+    st.write("""
+    This section of the dashboard allows users to explore the COVID-19 epidemic's 
+    progression in France through an interactive map and a detailed chart. The map 
+    illustrates the incidence rate across various departments, and the chart shows 
+    the trend in case numbers over time for a selected department, along with the 
+    percentage of COVID-related visits compared to all visits.
+    """)
+    
+    # Create two columns for department selection and wave selection
+    col_dep, col_wave = st.columns(2)
+    
     with col_dep:
-        selected_departement = st.selectbox('Select a department:', departements)
-
+        # Department selection dropdown
+        selected_department = st.selectbox('Select a Department:', departments)
+    
     with col_wave:
-        wave = st.selectbox("Wave", [1, 2, 3])
+        # Epidemic wave selection dropdown
+        wave = st.selectbox("Select an Epidemic Wave:", [1, 2, 3], index=2)
+    
+    # MAP VISUALIZATION
+    st.write("""
+    #### Map Visualization
+    Below is a map depicting the spread of COVID-19 across France. You can select 
+    a specific department to focus on and an epidemic wave to see how the situation 
+    evolved during that period.
+    """)
+    # Attempt to generate a map highlighting the selected department and wave
+    map_display = map_cov(dep_to_highlight=selected_department, wave=wave)
+    st.plotly_chart(map_display, use_container_width=True)
 
+    # CHART VISUALIZATION
+    st.write("""
+    #### Chart Visualization
+    The chart below offers a closer look at the epidemic's evolution within the 
+    selected department. It not only displays the moving average of daily COVID-19 
+    cases but also visualizes the proportion of COVID-related visits out of all 
+    healthcare visits. This metric serves as an indicator of the pandemic's impact 
+    on the healthcare system over time for a given department.
+    """)
+    # Generate and display the chart
+    line_chart = plot_timeserie_with_animation(dep=selected_department)
+    st.plotly_chart(line_chart, use_container_width=True)
 
-
-    #try : 
-    map = map_cov(wave=wave, dep_to_highlight=selected_departement)
-    #except ValueError:
-    #    map = map_cov(wave=1, dep_to_highlight=None)
-
-
-    # Usage remains the same
-    line = plot_timeserie_with_animation(dep=selected_departement)
-
-    # make the title of the dashboard 
-    st.plotly_chart(map, use_container_width=True)
-    st.plotly_chart(line, use_container_width=True)
 
 
 #Add different pages
 PAGES = {
     "Overview": Overview_page,
-    "Covid by Departement": Departement_page,
+    "Covid by Departement": DepartmentPage,
 }
 
 demo_name = st.sidebar.selectbox("Choose a page", PAGES.keys())
