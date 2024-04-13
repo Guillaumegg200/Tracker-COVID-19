@@ -191,11 +191,50 @@ def DepartmentPage():
     st.plotly_chart(line_chart, use_container_width=True)
 
 
+def SaturationPage():
+    """This function creates a page on the Streamlit app that focuses on the
+    saturation of hospitals by department in France. It provides interactive
+    elements for users to select a department, 
+    and displays corresponding visual data.
+    """
+    # Data loading
+    df = pd.read_csv('./preprocessed_data/covid19-saturation-dep.csv')
+
+    # Begin by defining the departments dropdown, including a default 'France' option
+    departments = ["France"] + df["Libellé"].unique().tolist()
+    
+    # Display a section header and an introductory message
+    st.subheader("Health System Saturation by Department")
+    st.write("""
+    This section of the dashboard allows users to explore the saturation of the health system 
+    in France through a detailed chart.
+    """)
+    
+    # Create a column for department selection
+    col_dep, _ = st.columns(2)
+    
+    with col_dep:
+        selected_department = st.selectbox('Select a Department:', departments)
+
+    # CHART VISUALIZATION
+    st.write("""
+    #### Chart Visualization
+    The chart below offers a closer look at the health system saturation rate within the 
+    selected department. It displays the moving average of three main indicators
+    over time, providing insights into the healthcare system's capacity to handle the 
+    COVID-19 pandemic.
+    """)
+
+    # Generate and display the chart
+    line_chart = plot_saturation(df, selected_department)
+    st.plotly_chart(line_chart, use_container_width=True)
+
 
 #Add different pages
 PAGES = {
     "Overview": Overview_page,
     "Covid by Departement": DepartmentPage,
+    "Health System Saturation": SaturationPage
 }
 
 demo_name = st.sidebar.selectbox("Choose a page", PAGES.keys())

@@ -350,3 +350,48 @@ def map_cov(dep_to_highlight=None, wave = 1):
         fig.update_layout(title_text=f'Covid cases in {dep_name} during the {wave} wave')
     
     return fig
+
+
+def get_date_first_peak(data: pd.DataFrame, column: str):
+    # Filter data to keep only the period of interest
+    data = data[(data["date"]<"2020-10-01") & (data["date"]>"2020-03-01")]
+    max_value = data[column].max()
+    if pd.isna(max_value):
+        return None, None
+    return data[data[column] == max_value]["date"].values[0], max_value
+
+
+def plot_saturation(data: pd.DataFrame, department: str):
+    # Filter data to keep only department of interest
+    if department == "France":
+        department = "France entière"
+    data = data[data["Libellé"] == department]
+    data = data[(data["date"]>"2020-03-01")]
+
+    # Create the plot
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=data["date"], y=data["Share of SOS med calls for Covid"], mode='lines', name='Share of SOS medecin calls for Covid'))
+    fig.add_trace(go.Scatter(x=data["date"], y=data["Share of hospital emergency visits for Covid"], mode='lines', name='Share of all emergency visits for Covid'))
+    fig.add_trace(go.Scatter(x=data["date"], y=data["Share of all critical care beds occupied by Covid patients"], mode='lines', name='Share of all critical care beds occupied by Covid patients'))
+    fig.add_shape(type="line", x0=data["date"].min(), y0=100, x1=data["date"].max(), y1=100, line=dict(color="red", width=1, dash="dash"))
+    fig.add_annotation(x=data["date"].max(), y=100, text="Saturation", showarrow=False, yshift=10, xshift=30)
+    
+    # Plot dash lines to indicate the date of the first peak for each indicator
+    max_dates = [get_date_first_peak(data, column) for column in ["Share of SOS med calls for Covid","Share of hospital emergency visits for Covid", "Share of all critical care beds occupied by Covid patients"]]
+    max_dates = [date for date in max_dates if date[0] is not None]
+    for index, (x0, max_value) in enumerate(max_dates):
+        fig.add_shape(type="line", x0=x0, y0=0, x1=x0, y1=max_value, line=dict(color="black", width=1, dash="dash"))
+        fig.add_annotation(x=x0, y=max_value, text=f"({index+1})", showarrow=False, yshift=10)
+    
+    # Update layout
+    fig.update_layout(title='Saturation of health system during Covid-19 in France',
+                        xaxis_title='Date',
+                        yaxis_title='Percentage',
+                        showlegend=True,
+                        plot_bgcolor='white',  
+                        paper_bgcolor='white', 
+                        font=dict(color='black'),
+                        xaxis=dict(showgrid=False), 
+                        yaxis=dict(showgrid=False)
+                    )
+    return fig
