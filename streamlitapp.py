@@ -191,6 +191,47 @@ def DepartmentPage():
     st.plotly_chart(line_chart, use_container_width=True)
 
 
+
+def AgeGroupsPage():
+    """
+    This function creates a page on the Streamlit app that focuses on the
+    COVID-19 hospitalizations in France by age group. It provides interactive
+    elements for users to select a date range, and displays corresponding visual data.
+    """
+    
+    st.title('Repartition of COVID-19 per age group in France')
+    st.write('This section displays the evolution of COVID-19 hospitalizations in France by age group.')
+
+    # Load the data
+    path = "./raw_data/sursaud-covid19-departement_2020.csv"
+    df = pd.read_csv(path, sep=";")
+
+    columns = st.columns((4, 1), gap="large")
+
+    with columns[0]:
+        st.subheader('Evolution of COVID hospitalizations by age group over time')
+        st.write("You can select a date range to zoom in the chart below. An overview of the share of each age group over this period will be displayed on the right.")
+        # Add a transparent box to chart_evol to select a date range
+        date_range = st.select_slider('Select a date range:', df['date_de_passage'].unique(), (df['date_de_passage'].min(), df['date_de_passage'].max()))
+        date_start, date_end = date_range[0], date_range[1]
+
+        # Plot the evolution of hospitalizations by age group
+        chart_evol, df_chart = plot_age_group_px(df, date_end=date_end, date_start=date_start)
+        st.plotly_chart(chart_evol)
+
+    with columns[1]:
+        st.subheader('Share of each Age Group in hospitalizations')
+        st.write("Zoom in the selected period")
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write("")
+        # Plot the share of each age group in hospitalizations over time
+        chart_prop = plot_age_group_share(df_chart, date_start, date_end)
+        st.plotly_chart(chart_prop)
+
+
+
 def SaturationPage():
     """This function creates a page on the Streamlit app that focuses on the
     saturation of hospitals by department in France. It provides interactive
@@ -234,6 +275,7 @@ def SaturationPage():
 PAGES = {
     "Overview": Overview_page,
     "Covid by Departement": DepartmentPage,
+    "Age groups repartition": AgeGroupsPage,
     "Health System Saturation": SaturationPage
 }
 
