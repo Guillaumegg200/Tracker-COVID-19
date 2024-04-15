@@ -179,7 +179,7 @@ def DepartmentPage():
 
     # CHART VISUALIZATION
     st.write("""
-    #### Evolution of health system saturation during the COVID-19 pandemic
+    #### Chart Visualization
     The chart below offers a closer look at the epidemic's evolution within the 
     selected department. It not only displays the moving average of daily COVID-19 
     cases but also visualizes the proportion of COVID-related visits out of all 
@@ -258,7 +258,7 @@ def SaturationPage():
 
     # CHART VISUALIZATION
     st.write("""
-    #### Chart Visualization
+    #### Evolution of health system saturation during the COVID-19 pandemic
     The chart below offers a closer look at the health system saturation rate within the 
     selected department. It displays the moving average of three main indicators
     over time, providing insights into the healthcare system's capacity to handle the 
