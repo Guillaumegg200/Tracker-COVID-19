@@ -179,7 +179,7 @@ def DepartmentPage():
 
     # CHART VISUALIZATION
     st.write("""
-    #### Chart Visualization
+    #### Evolution of health system saturation during the COVID-19 pandemic
     The chart below offers a closer look at the epidemic's evolution within the 
     selected department. It not only displays the moving average of daily COVID-19 
     cases but also visualizes the proportion of COVID-related visits out of all 
@@ -189,7 +189,6 @@ def DepartmentPage():
     # Generate and display the chart
     line_chart = plot_timeserie_with_animation(dep=selected_department)
     st.plotly_chart(line_chart, use_container_width=True)
-
 
 
 def AgeGroupsPage():

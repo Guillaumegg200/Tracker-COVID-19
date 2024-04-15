@@ -327,7 +327,7 @@ def map_cov(dep_to_highlight=None, wave = 1):
                                 animation_frame='date_de_passage',
                                 color_continuous_scale='PuRd',
                                 range_color=[0, max_cumulative_value])
-        fig.update_layout(title_text=f'Covid cases in France by department during the {wave} wave')
+        fig.update_layout(title_text=f'Covid cases in France by department during the wave {wave}')
 
     if dep_to_highlight is not None:
         dep_to_highlight = int(dep_to_highlight)
@@ -347,7 +347,7 @@ def map_cov(dep_to_highlight=None, wave = 1):
                                 range_color=[0, max_cumulative_value])
         # add department name to the map
         dep_name = geo_df[geo_df['code'] == dep_to_highlight].nom.values[0]
-        fig.update_layout(title_text=f'Covid cases in {dep_name} during the {wave} wave')
+        fig.update_layout(title_text=f'Covid cases in {dep_name} during the wave {wave}')
     
     return fig
 
