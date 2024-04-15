@@ -75,11 +75,11 @@ def plot_tested(df):
                       yaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgrey', title_text=''),
                       hovermode="x unified")
     fig.data[0].fill = 'tozeroy'
-    fig.data[0].fillcolor = '#eed5dc'
-    fig.update_traces(marker=dict(size=10), line=dict(color='#c8738b'))
+    fig.data[0].fillcolor = '#d5e5f5'
+    fig.update_traces(marker=dict(size=10), line=dict(color='#4c7aaf'))
     fig.update_traces(
     marker=dict(size=10),
-    line=dict(color='#c8738b'),
+    line=dict(color='#4c7aaf'),
     hovertemplate=' <b>%{y:.2s}</b><extra></extra>'
     )
     return fig
@@ -100,11 +100,11 @@ def plot_positive_rate(df):
                       ),
                       hovermode="x unified")
     fig.data[0].fill = 'tozeroy'
-    fig.data[0].fillcolor = '#eed5dc'
-    fig.update_traces(marker=dict(size=10), line=dict(color='#c8738b'))
+    fig.data[0].fillcolor = '#d5bad5'
+    fig.update_traces(marker=dict(size=10), line=dict(color='#886688'))
     fig.update_traces(
     marker=dict(size=10),
-    line=dict(color='#c8738b'),
+    line=dict(color='#886688'),
     hovertemplate='<b>%{y} </b><extra></extra>'
     )
     return fig
@@ -118,11 +118,11 @@ def plot_incidence_rate(df):
                       yaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgrey', title_text=''),
                       hovermode="x unified")
     fig.data[0].fill = 'tozeroy'
-    fig.data[0].fillcolor = '#eed5dc'
-    fig.update_traces(marker=dict(size=10), line=dict(color='#c8738b'))
+    fig.data[0].fillcolor = '#eaeaea'
+    fig.update_traces(marker=dict(size=10), line=dict(color='#7f7f7f'))
     fig.update_traces(
     marker=dict(size=10),
-    line=dict(color='#c8738b'),
+    line=dict(color='#7f7f7f'),
     hovertemplate='<b>%{y:.0f}‰ </b><extra></extra>'
     )
     return fig

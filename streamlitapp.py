@@ -62,12 +62,12 @@ def Overview_page():
             evolution = (np.sum(df_week["P"]) - np.sum(df_previous_week["P"]))/np.sum(df_week["P"]) * 100
             if evolution > 0:
                 st.markdown(
-                    f"""<p class="big-font" style="color: #228B22;">{evolution:.2f} %</p>""",
+                    f"""<p class="big-font" style="color: #ff0000;">{evolution:.2f} %</p>""",
                     unsafe_allow_html=True,
                 )
             else:
                 st.markdown(
-                    f"""<p class="big-font" style="color: #ff0000;">{evolution:.2f} %</p>""",
+                    f"""<p class="big-font" style="color: #228B22;">{evolution:.2f} %</p>""",
                     unsafe_allow_html=True,
                 )
 
@@ -100,11 +100,11 @@ def Overview_page():
 
     col1, col2  = st.columns(2)
     with col1:
-        st.plotly_chart(plot_positive_cases_with_zoom(df,  start_date, end_date),height=30, width=300)
+        st.plotly_chart(plot_positive_cases_with_zoom(df,  start_date, end_date), use_container_width=True)
         st.write('Move or resize the period you wish to inspect ')
 
     with col2:
-        st.plotly_chart(plot_positive_cases(df, start_date, end_date))
+        st.plotly_chart(plot_positive_cases(df, start_date, end_date), use_container_width=True)
 
 
     st.subheader("National dynamics of the epidemic")
@@ -114,7 +114,7 @@ def Overview_page():
     with col1:
         st.subheader("Incidence rate")
         st.markdown(
-                    f"""<h4 style="color: #c8738b;">{df.iloc[-1]['Ti']:.0f} ‰ on {today.strftime("%A, %B %d, %Y")}</h4>""",
+                    f"""<h4 style="color: #7f7f7f;">{df.iloc[-1]['Ti']:.0f} ‰ on {today.strftime("%A, %B %d, %Y")}</h4>""",
                     unsafe_allow_html=True,
                 )
         st.plotly_chart(plot_incidence_rate(df), use_container_width=True)
@@ -122,7 +122,7 @@ def Overview_page():
     with col2:
         st.subheader("People tested")
         st.markdown(
-                    f"""<h4 style="color: #c8738b;">{df.iloc[-1]['T']//1000}k on {today.strftime("%A, %B %d, %Y")}</h4>""",
+                    f"""<h4 style="color: #4c7aaf;">{df.iloc[-1]['T']//1000}k on {today.strftime("%A, %B %d, %Y")}</h4>""",
                     unsafe_allow_html=True,
                 )
         st.plotly_chart(plot_tested(df), use_container_width=True)
@@ -130,7 +130,7 @@ def Overview_page():
     with col3:
         st.subheader("Positive Rate")
         st.markdown(
-                    f"""<h4 style="color: #c8738b;">{df.iloc[-1]['Tp']:.1f} % on {today.strftime("%A, %B %d, %Y")}</h4>""",
+                    f"""<h4 style="color: #886688;">{df.iloc[-1]['Tp']:.1f} % on {today.strftime("%A, %B %d, %Y")}</h4>""",
                     unsafe_allow_html=True,
                 )
         st.plotly_chart(plot_positive_rate(df), use_container_width=True)
